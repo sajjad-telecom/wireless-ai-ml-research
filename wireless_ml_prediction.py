@@ -34,8 +34,7 @@ y = quality
 
 # 3. Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
+    X, y,
     test_size=0.2,
     random_state=42,
     stratify=y
@@ -63,7 +62,7 @@ models = {
     )
 }
 
-# 5. Train and evaluate all models
+# 5. Train and evaluate models
 os.makedirs("results", exist_ok=True)
 
 results = []
@@ -104,7 +103,7 @@ for name, model in models.items():
     print(f"Recall:    {recall:.4f}")
     print(f"F1-Score:  {f1:.4f}")
 
-    # Save classification report
+    # Classification report
     report = classification_report(
         y_test,
         predictions,
@@ -117,7 +116,7 @@ for name, model in models.items():
         f"results/{name.lower().replace(' ', '_')}_report.csv"
     )
 
-    # Save confusion matrix
+    # Confusion matrix
     cm = confusion_matrix(y_test, predictions)
 
     disp = ConfusionMatrixDisplay(
@@ -134,8 +133,9 @@ for name, model in models.items():
     )
     plt.close()
 
-# 6. Save model comparison results
+# 6. Save comparison results
 results_df = pd.DataFrame(results)
+
 results_df = results_df.sort_values(
     by="F1-Score",
     ascending=False
@@ -159,14 +159,16 @@ plt.ylabel("Score")
 plt.ylim(0, 1.05)
 plt.xticks(rotation=20)
 plt.tight_layout()
+
 plt.savefig(
     "results/model_comparison.png",
     dpi=300,
     bbox_inches="tight"
 )
+
 plt.close()
 
-# 8. Save Random Forest feature importance
+# 8. Save feature importance
 rf_model = trained_models["Random Forest"]
 
 feature_importance = pd.DataFrame({
@@ -185,9 +187,12 @@ new_channel = np.array([[25, 4]])
 print("\nPrediction for New Wireless Channel:")
 
 for name, model in trained_models.items():
+
     prediction = model.predict(new_channel)
 
-    quality_label = "Good" if prediction[0] == 1 else "Poor"
+    quality_label = (
+        "Good" if prediction[0] == 1 else "Poor"
+    )
 
     print(f"{name}: {quality_label}")
 
