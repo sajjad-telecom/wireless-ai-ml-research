@@ -46,17 +46,14 @@ models = {
         n_estimators=100,
         random_state=42
     ),
-
     "SVM": make_pipeline(
         StandardScaler(),
         SVC(kernel="rbf", probability=True, random_state=42)
     ),
-
     "Logistic Regression": make_pipeline(
         StandardScaler(),
         LogisticRegression(max_iter=1000)
     ),
-
     "Gradient Boosting": GradientBoostingClassifier(
         random_state=42
     )
@@ -72,22 +69,15 @@ print("Wireless Channel ML Model Comparison")
 print("=" * 45)
 
 for name, model in models.items():
-
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
 
     trained_models[name] = model
 
     accuracy = accuracy_score(y_test, predictions)
-    precision = precision_score(
-        y_test, predictions, zero_division=0
-    )
-    recall = recall_score(
-        y_test, predictions, zero_division=0
-    )
-    f1 = f1_score(
-        y_test, predictions, zero_division=0
-    )
+    precision = precision_score(y_test, predictions, zero_division=0)
+    recall = recall_score(y_test, predictions, zero_division=0)
+    f1 = f1_score(y_test, predictions, zero_division=0)
 
     results.append({
         "Model": name,
@@ -103,7 +93,6 @@ for name, model in models.items():
     print(f"Recall:    {recall:.4f}")
     print(f"F1-Score:  {f1:.4f}")
 
-    # Classification report
     report = classification_report(
         y_test,
         predictions,
@@ -116,7 +105,6 @@ for name, model in models.items():
         f"results/{name.lower().replace(' ', '_')}_report.csv"
     )
 
-    # Confusion matrix
     cm = confusion_matrix(y_test, predictions)
 
     disp = ConfusionMatrixDisplay(
@@ -187,13 +175,8 @@ new_channel = np.array([[25, 4]])
 print("\nPrediction for New Wireless Channel:")
 
 for name, model in trained_models.items():
-
     prediction = model.predict(new_channel)
-
-    quality_label = (
-        "Good" if prediction[0] == 1 else "Poor"
-    )
-
+    quality_label = "Good" if prediction[0] == 1 else "Poor"
     print(f"{name}: {quality_label}")
 
 print("\nAll evaluation results saved successfully!")
